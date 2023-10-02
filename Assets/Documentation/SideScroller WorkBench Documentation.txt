@@ -1,0 +1,76 @@
+GameManager :
+
+The GameManager is in control of the CanMove and CanSwitch Variables,
+by default these 2 should be set to true
+(Note: However for stability, set them to true in the Unity inspector)
+
+Set CanMove and CanSwitch to false as necessary:
+
+Some situations found this to be needed (add as necessary):
+
+- Camera is moving
+- There is a conversation happening
+- ...
+
+Added the feature to freeze switching and movement if the camera isnt looking
+at the active player, useful for when we are focusing on an object
+
+*Note to insert a way to freeze movement/switching in a "cutscene"*
+
+
+
+CameraMovement :
+
+By default the camera follows the "active player", controlled by the PlayerSwitching
+manager :
+
+cameraMovement.playerTransform = players[0].transform;
+
+We can change the target 'temporarily' using :
+
+cameraMovement.playerTransform = targetBlock.transform;
+
+[Here "targetBlock" is the target the camera is heading to]
+
+Note that i typically moving to the target block in the update() method
+
+
+*Safety* :
+
+These are stacks of redundant code that shouldve been unnecessary, but are there to
+prevent bugs
+
+1)	The active player needs to be a child of the moving platform its standing on
+	else the player wont actually follow the movement of the platform
+
+2)	DO NOT add Colliders to the player objects (Unity sucks at math)
+	so it causes problems with triggers and stuff
+   
+	If you need to create a system where the player colliding with the side of the
+	platform will cause something to happen, simply check collision with trigger
+	and create another BoxCollider for the structure
+
+3)	All Platforms that involve moving the player while the platform is moving, must
+	be tagged as "Platform", else the player wont follow the platform
+
+4)	Set all platforms/surfaces to have 0 friction, to prevent the player sticking to walls
+
+5)	Remember to set all surfaces to Layer : "Ground", else the player can't jump on it, and
+	moving platforms should have 2 box colliders, 1 is a trigger, 1 is not
+
+
+
+Dialogue System :
+
+*Note* not fully tested with actual sprites and animations
+
+1)	The developer will load the necessary Speaker Name, Speaker Dialogue and Speaker Image through
+	the Dialogue Trigger
+
+2)	Note that the images for the people should be on the same canvas as the "Sample Texts"
+
+3)	The sample texts are important cuz thats where you make the aesthetic changes, like font,
+	color, etc
+
+4)	Things it need to work are all in the Dialogue System folder in scripts, however the actual
+	Manager need a GameObject
